@@ -1,0 +1,228 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+<body>
+
+    {% block content %}
+
+    {% load cart %}
+    {% load custom_filter %}
+
+
+
+
+
+
+<section id="hero">
+    <h4>Trade-in-offer</h4>
+    <h2>Super value deals</h2>
+    <h1>On all products</h1>
+    <p>Save more with coupons & up to 70% off</p>
+    <button onclick="window.location='/shop'">Shop Now</button>
+</section>
+
+
+
+
+<section id="feature" class="section-p1">
+    <div class="fe-box">
+        <img src="{% static 'img/features/f1.png' %}" alt="">
+        <h6>Free Shipping</h6>
+    </div>
+    <div class="fe-box">
+        <img src="{% static 'img/features/f2.png' %}" alt="">
+        <h6>Online Order</h6>
+    </div>
+    <div class="fe-box">
+        <img src="{% static 'img/features/f3.png' %}" alt="">
+        <h6>Save Money</h6>
+    </div>
+    <div class="fe-box">
+        <img src="{% static 'img/features/f4.png' %}" alt="">
+        <h6>Promotions</h6>
+    </div>
+    <div class="fe-box">
+        <img src="{% static 'img/features/f5.png' %}" alt="">
+        <h6>Happy Sell</h6>
+    </div>
+    <div class="fe-box">
+        <img src="{% static 'img/features/f6.png' %}" alt="">
+        <h6>F24/7 Support</h6>
+    </div>
+</section>
+
+
+
+<section id="product1" class="section-p1">
+    <h2>Feature Products</h2>
+    <p>Summer Collection New Morden Design</p>
+    <div class="pro-container">
+
+        {% for product in FeatureProduct %}
+        <div class="pro" id="{{product.id}}">
+            <a href="/sproduct/{{product.id}}" style="text-decoration: none;">
+            <img src="{{product.image.url}}" alt="">
+            <div class="des">
+                <span>{{product.category}}</span>
+                <h5>{{product.name}}</h5>
+                <div class="star">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+
+                </div>
+                <h4>{{product.price|currency}}</h4>
+            </div>
+            </a>
+
+            {% if product|is_in_cart:request.session.cart %}
+            <div class="cart_div">
+      
+              <form action="/shop#{{product.id}}" class="col-2" method="post">{% csrf_token %}
+                <input type="text" hidden name="product" value='{{product.id}}'>
+                <input type="text" hidden name="remove" value='True'>
+                  <input type="submit" class="minus_cart" value="-"  name="" id="">
+                </form>
+      
+              <div class="col cart_quantity">
+                  {{product|cart_quantity:request.session.cart}}
+              </div>
+             
+              <form action="/shop#{{product.id}}" class="col-2" method="post">{% csrf_token %}
+                <input type="text" hidden name="product" value='{{product.id}}'>
+      
+                <input type="submit" class="add_cart" value="+"  name="" id="">
+              </form>
+            </div>
+      
+      
+            {% else %}
+            <form action="/shop#{{product.id}}" method="POST" class="btn-block">{% csrf_token %}
+              <input type="text" hidden name="product" value='{{product.id}}'>
+            <button type="submit" class="Add_To_Cart"><i class="bi bi-cart cart"></i></button>
+            </form>
+            
+            {% endif %}
+            
+            
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+
+<section id="banner" class="section-m1">
+    <h4>Repair Service</h4>
+    <h2>Up to <span> 70% off</span> - All t-shirt & Accessories</h2>
+    <button class="normal"  onclick="window.location='/shop'">Explore More</button>
+</section>
+
+
+<!-- New Arrivals -->
+<section id="product1" class="section-p1">
+    <h2>New Arrivals</h2>
+    <p>Summer Collection New Morden Design</p>
+    <div class="pro-container">
+        {% for product in NewArrival %}
+        <div class="pro">
+            <a href="/sproduct/{{product.id}}" style="text-decoration: none;">
+            <img src="{{product.image.url}}" alt="">
+            <div class="des">
+                <span>{{product.category}}</span>
+                <h5>{{product.name}}</h5>
+                <div class="star">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+
+                </div>
+                <h4>{{product.price|currency}}</h4>
+            </div>
+            </a>
+            {% if product|is_in_cart:request.session.cart %}
+            <div class="cart_div">
+      
+              <form action="/shop#{{product.id}}" class="col-2" method="post">{% csrf_token %}
+                <input type="text" hidden name="product" value='{{product.id}}'>
+                <input type="text" hidden name="remove" value='True'>
+                  <input type="submit" class="minus_cart" value="-"  name="" id="">
+                </form>
+      
+              <div class="col cart_quantity">
+                  {{product|cart_quantity:request.session.cart}}
+              </div>
+             
+              <form action="/shop#{{product.id}}" class="col-2" method="post">{% csrf_token %}
+                <input type="text" hidden name="product" value='{{product.id}}'>
+      
+                <input type="submit" class="add_cart" value="+"  name="" id="">
+              </form>
+            </div>
+      
+      
+            {% else %}
+            <form action="/shop#{{product.id}}" method="POST" class="btn-block">{% csrf_token %}
+              <input type="text" hidden name="product" value='{{product.id}}'>
+            <button type="submit" class="Add_To_Cart"><i class="bi bi-cart cart"></i></button>
+            </form>
+            
+            {% endif %}
+            
+            
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+
+<section id="sm-banner" class="section-p1">
+<div class="banner-box"  onclick="window.location='/shop'">
+    <h4>crazy deals</h4>
+    <h2>buy 1 get 1 free</h2>
+     <span>The best classic dress is on sale at cara</span>
+     <button class="white">Learn More</button>
+</div>
+<div class="banner-box banner-box2"  onclick="window.location='/shop'">
+    <h4>Spring/Summer</h4>
+    <h2>upcoming season</h2>
+     <span>The best classic dress is on sale at cara</span>
+     <button class="white">Collection</button>
+</div>
+</section>
+
+
+
+
+<section id="banner3">
+    <div class="banner-box">   
+        <h2>SEASONAL SALE</h2>
+        <h3>Winter Collection -50% OFF</h3>    
+    </div>
+    <div class="banner-box banner-box2">   
+        <h2>NEW FOOTWEAR COLLECTION</h2>
+        <h3>Spring / Summer 2022</h3>    
+    </div>
+    <div class="banner-box banner-box3">   
+        <h2>T-SHIRT</h2>
+        <h3>New Trendy Prints</h3>    
+    </div>
+</section>
+
+
+
+
+
+{% include 'newsletters.html' %}
+{% include 'footer.html' %}
+
+{% endblock %}
+
+
+    
+</body>
+</html>

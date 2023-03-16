@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block content %}
+{% load cart %}
+{% load custom_filter %}
+
+
+<body>
+
+
+
+
+<section id="prodetails" class="section-p1">
+    <div class="single-pro-image">
+        <img src="{{product.image.url}}" width="544" height="544" id="MainImg" alt="">
+        <div class="small-img-group" style="margin-top: 7px;">
+            <div class="smaill-img-col">
+                <img src="{{product.image.url}}" width="130.48" height="135.48" class="small-img" alt="">
+            </div>
+            {% if product.image2 %}
+            <div class="smaill-img-col">
+                <img src="{{product.image2.url}}" width="130.48" height="135.48" class="small-img" alt="">
+            </div>
+            {% endif %}
+            {% if product.image3 %}
+            <div class="smaill-img-col">
+                <img src="{{product.image3.url}}" width="130.48" height="135.48" class="small-img" alt="">
+            </div>
+            {% endif %}
+
+            {% if product.image4 %}
+            <div class="smaill-img-col">
+                <img src="{{product.image4.url}}" width="130.48" height="135.48" class="small-img" alt="">
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+    
+    <div class="single-pro-details">
+        <h6>Home / {{product.category}}</h6>
+        <h4>{{product.name}}</h4>
+        <h2>{{product.price|currency}}</h2>
+
+<!-- ngjdg -->
+
+
+     {% if product|is_in_cart:request.session.cart %}
+      <div class="row no-gutters sproduct_cart">
+        
+
+        <form action="/shop#{{product.id}}" class="col-2 " method="post">{% csrf_token %}
+          <input type="text" hidden name="product" value='{{product.id}}'>
+          <input type="text" hidden name="remove" value='True'>
+            <button type="submit" class="normal sproduct_cart_minus"> - </button>
+        </form>
+
+        <div class="col-2 text-center sproduct_cart_length" style="">
+            {{product|cart_quantity:request.session.cart}} in Cart
+        </div>
+       
+        <form action="/shop#{{product.id}}" class="col-2" method="post">{% csrf_token %}
+            <input type="text" hidden name="product" value='{{product.id}}'>
+            <button type="submit" class="normal" > + </button>
+        </form>
+
+      </div>
+
+
+      {% else %}
+      <form action="/shop#{{product.id}}" method="POST" class="btn-block">{% csrf_token %}
+        <input type="text" hidden name="product" value='{{product.id}}'>
+      <button type="submit" class="normal">Add To Cart</button>
+      </form>
+      
+{% endif %}
+
+<!-- nfvhsdbg -->
+
+        <h4>Product Details</h4>
+        <span>{{product.description}}</span>
+    </div>
+
+</section>
+
+
+<section id="product1" class="section-p1">
+    <h2>Featured Products</h2>
+    <p>Summer Collection New Morden Design</p>
+    <div class="pro-container">
+
+        {% for FeaturedProduct in FeaturedProduct %}
+
+        <div class="pro">
+            <img src="{{FeaturedProduct.image.url}}" width="287" height="287" alt="">
+            <div class="des">
+                <span>{{FeaturedProduct.category}}</span>
+                <h5>{{FeaturedProduct.name}}</h5>
+                <div class="star">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+
+                </div>
+                <h4>{{FeaturedProduct.price|currency}}</h4>
+            </div>
+            {% if FeaturedProduct|is_in_cart:request.session.cart %}
+            <div class="cart_div">
+      
+              <form action="/shop#{{FeaturedProduct.id}}" class="col-2" method="post">{% csrf_token %}
+                <input type="text" hidden name="product" value='{{FeaturedProduct.id}}'>
+                <input type="text" hidden name="remove" value='True'>
+                  <input type="submit" class="minus_cart" value="-"  name="" id="">
+                </form>
+      
+              <div class="col cart_quantity">
+                  {{FeaturedProduct|cart_quantity:request.session.cart}}
+              </div>
+             
+              <form action="/shop#{{FeaturedProduct.id}}" class="col-2" method="post">{% csrf_token %}
+                <input type="text" hidden name="product" value='{{FeaturedProduct.id}}'>
+      
+                <input type="submit" class="add_cart" value="+"  name="" id="">
+              </form>
+            </div>
+      
+      
+            {% else %}
+            <form action="/shop#{{FeaturedProduct.id}}" method="POST" class="btn-block">{% csrf_token %}
+              <input type="text" hidden name="product" value='{{FeaturedProduct.id}}'>
+            <button type="submit" class="Add_To_Cart"><i class="bi bi-cart cart"></i></button>
+            </form>
+            
+            {% endif %}
+            
+            
+        </div>
+    
+        {% endfor %}
+    </div>
+</section>
+
+{% include 'newsletters.html' %}
+{% include 'footer.html' %}
+
+
+
+<script>
+    var MainImg = document.getElementById("MainImg");
+    var smallimg = document.getElementsByClassName("small-img");
+
+    smallimg[0].onclick = function(){
+        MainImg.src = smallimg[0].src;
+    }
+    smallimg[1].onclick = function(){
+        MainImg.src = smallimg[1].src;
+    }
+    smallimg[2].onclick = function(){
+        MainImg.src = smallimg[2].src;
+    }
+    smallimg[3].onclick = function(){
+        MainImg.src = smallimg[3].src;
+    }
+
+</script>
+
+
+
+   
+</body>
+{% endblock %}
+</html>

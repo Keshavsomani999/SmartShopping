@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+{% load cart %}
+{% load custom_filter %}
+
+
+
+<section id="page-header">
+    
+    <h2># Your Orders</h2>
+    
+    <p>Save more with coupons & up to 70% off</p>
+    
+</section>
+
+
+{% if orders %}
+<section id="cart" class="section-p1">
+    <table width=100%>
+        <thead>
+            <tr>
+            <td>Sno.</td>
+            <td>Image</td>
+            <td>Product</td>
+            <td>Date</td>
+            <td>Price</td>
+            <td>Quantity</td>
+            <td>Total</td>
+            <td>Status</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+
+            <tr>
+                <td>{{forloop.counter}}</td>
+                <td><img src="{{order.product.image.url}}" alt=""></td>
+                <td>{{order.product.name|slice:":20"}}..</td>
+                <td>{{order.date}}</td>
+                <td>{{order.product.price|currency}}</td>
+                <td>{{order.quantity }}</td>
+                <td>{{order.quantity|multiply:order.price|currency}}</td>
+                {% if order.status %}
+                    <td><p class="order_Completed">Completed</p></td>
+                    {% else %}
+                    <td><p class="order_Pending">Pending</p></td>
+                    {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+
+{% else %}
+
+<section class="Empty_Order">
+
+<img src="{% static 'img/Empty_Order.png' %}" alt="">
+<h4><strong>You haven't placed any order yet!</strong></h4>
+<h4>Order section is empty. After placing order, You can track them from here!</h4>
+
+
+
+</section>
+
+{% endif %}
+
+{% include 'newsletters.html' %}
+{% include 'footer.html' %}
+{% endblock %}

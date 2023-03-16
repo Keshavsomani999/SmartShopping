@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block link %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <div class="p-4 m-4">
+        <div class="col-lg-5 mx-auto border rounded p-4 ">
+            <h3 class="alert alert-light border rounded">Create An Account</h3>
+            <form action="/signup" method="POST">{% csrf_token %}
+              
+              {% if error %}
+              <div class="alert alert-danger" role="alert">
+                <strong>{{error}}</strong>
+              </div>
+              {% endif %}
+              
+              <div class="form-group my-2">
+                    <label for="">First Name</label>
+                    <input type="text" name="firstname" value="{{values.first_name}}" id="" class="form-control form-control-sm" aria-describedby="helpId">
+                  </div>
+                  <div class="form-group my-2">
+                    <label for="">Last Name</label>
+                    <input type="text" name="lastname" value="{{values.last_name}}"  id="" class="form-control form-control-sm"  aria-describedby="helpId">
+                  </div>
+                  <div class="form-group my-2">
+                    <label for="">Phone</label>
+                    <input type="text" name="phone" value="{{values.phone}}"  id="" class="form-control form-control-sm" placeholder="99999999" aria-describedby="helpId">
+                  </div>
+
+                <div class="form-group my-2">
+                  <label for="">Email</label>
+                  <input type="email" value="{{values.email}}"  name="email" id="" class="form-control form-control-sm" placeholder="example@gmail.com" aria-describedby="helpId">
+                </div>
+
+                <div class="form-group my-2">
+                    <label for="">Password</label>
+                    <input required type="password" name="password" id="" class="form-control form-control-sm" placeholder="*******" aria-describedby="helpId">
+                  </div>
+                
+                  <div class="form-group mt-2">
+                   
+                    <input class="btn btn-info" type="submit" value="Create An Account">
+                    <P class="mt-4 text-primary"><a href="/login" style="text-decoration: none;font-weight: bold;">Existing User? Log in</a></P>
+                    
+                  </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

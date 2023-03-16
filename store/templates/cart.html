@@ -1,0 +1,252 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+{% load cart %}
+{% load custom_filter %}
+<style>
+  .modal-content img{
+    width: 10%;
+    height: 10%;
+  }
+  #check_form{
+    margin-top: 30px;
+  }
+  #check_form input{
+    margin-top: 10px;
+    padding: 10px 20px;
+    outline: none;
+    width: 60%;
+    border: 1px solid #e2e9e1;
+  }
+  #check_form button {
+    margin-top: -7%;
+    float:right;
+    background-color: #088178;
+    color: #fff;
+    padding: 12px 20px;
+  }
+  #phone{
+    margin-left: 16px;
+  }
+
+  .modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+ }
+
+/* Modal Content */
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 40%;
+}
+
+/* The Close Button */
+.close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+</style>
+
+
+<section id="page-header">
+    
+  <h2># Cart</h2>
+  
+  <p>Save more with coupons & up to 70% off</p>
+  
+</section>
+
+
+<section id="cart" class="section-p1">
+  {% if products%}
+
+  <table width=100%>
+      <thead>
+          <tr>
+          <td>S.no</td>
+          <td>Image</td>
+          <td>Product</td>
+          <td>Price</td>
+          <td>Quantity</td>
+          <td>Subtotal</td>
+          </tr>
+      </thead>
+      <tbody>
+        {% for product in products %}
+          <tr>
+              <td>{{forloop.counter}}</td>
+              <td><img src="{{product.image.url}}" alt=""></td>
+              <td>{{product.name}}</td>
+              <td>{{product.price|currency}}</td>
+              <td>{{product|cart_quantity:request.session.cart}}</td>
+              <td>{{product|price_total:request.session.cart|currency}}</td>
+          </tr>
+         {% endfor %}
+      </tbody>
+  </table>
+
+</section>
+
+<section id="cart-add" class="section-p1">
+  <div id="coupon">
+      <h3>Apply Coupon</h3>
+      <form action="{% url 'cart' %}" method="post">{% csrf_token %}
+          <input type="text" value="{{products|total_cart_price:request.session.cart}}" name="sub_total" hidden>
+          <input type="text" name="coupon" value="{{name}}" placeholder="Enter Your Coupon">
+          {% if coupon %}
+          <img src="{% static 'img/check.gif' %}" alt=""> 
+          {% endif %}
+          {% if coupon == False %}
+          <img src="{% static 'img/cross.gif' %}" alt="">
+          {% endif %}
+          <button class="normal" type="submit">Apply</button>
+
+      </form>
+      <div class="coupon_apply">
+      {% if coupon == False %}
+      <p>Sorry, this coupon is not valid.</p>
+      {% endif %}
+      {% if coupon.name %}
+      <p id="coupon">Applied :{{coupon.name}}</p>
+      {% endif %}
+      {% if message %}
+      <p>{{message}} {{add_more|currency}}</p>
+      
+      {% endif %}
+      </div>
+  </div>
+
+  <div id="subtotal">
+      <h3>Cart Totals</h3>
+      <table>
+          <tr>
+              <td>Cart Subtotal</td>
+              <td>{{products|total_cart_price:request.session.cart}}</td>
+          </tr>
+          <tr>
+              <td>Shipping</td>
+              <td>Free</td>
+          </tr>
+          <tr>
+            <td>Discount</td>
+
+            {% if coupon.name %}
+            <td>{{coupon.off|currency}}</td>
+            {% else %}
+            <td> -- </td>
+            {% endif %}
+        </tr>
+          <tr>
+              <td><strong>Total</strong></td>
+              {% if coupon.name %}
+              <td><strong>{{products|total_cart_price:request.session.cart|coupon:coupon.off}}</strong></td>              
+              {% else %}
+              <td><strong>{{products|total_cart_price:request.session.cart|currency}}</strong></td>
+              {% endif %}
+          </tr>
+      </table>
+      <button class="normal"><a href="#" style="text-decoration: none; color: #fff;" id="myBtn"> Proceed to checkout</a></button>
+  </div>
+
+</section>
+
+
+
+<!-- The Modal -->
+<div id="myModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <img src="{% static 'img/Logo2.jpg' %}" alt="">
+    <span class="close">&times;</span>
+    <form action="/check-out" method="post" id="check_form">
+      {% csrf_token %}
+      <div>
+        <label for="">Address</label>
+        <input type="text" name="address" class="check_input" >
+      </div>
+      <div>
+          <label for="">Phone</label>
+          <input type="text" name="phone" class="check_input" id="phone">
+        </div>
+        <button type="submit" class="normal">Checkout</button>
+        
+      </form>
+  </div>
+
+</div>
+
+
+  {% else %}
+<section id="Empty_Cart">
+  <img src="{% static 'img/Empty_cart.png' %}" alt="">
+<hr>
+<h4>Your cart is Empty</h4>
+<hr>
+<p> Your shopping cart is waiting. Give it purpose – fill it with groceries, clothing, household supplies, electronics and more.
+  Continue shopping on the Amazon.in homepage, learn about today's deals, or visit your Wish List. </P>
+</section>
+
+
+
+  {% endif %}
+
+</section>
+
+  {% include 'newsletters.html' %}
+  {% include 'footer.html' %}
+
+
+
+
+<script>
+  // Get the modal
+  var modal = document.getElementById("myModal");
+  
+  // Get the button that opens the modal
+  var btn = document.getElementById("myBtn");
+  
+  // Get the <span> element that closes the modal
+  var span = document.getElementsByClassName("close")[0];
+  
+  // When the user clicks the button, open the modal 
+  btn.onclick = function() {
+    modal.style.display = "block";
+  }
+  
+  // When the user clicks on <span> (x), close the modal
+  span.onclick = function() {
+    modal.style.display = "none";
+  }
+  
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  }
+  </script>
+
+{% endblock %}
